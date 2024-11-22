@@ -21,7 +21,8 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
+  
   "exclude": ["node_modules", "scripts", "dist"]
 }

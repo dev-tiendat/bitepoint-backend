@@ -35,6 +35,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
         const status = this.getStatus(exception);
         let message = this.getErrorMessage(exception);
+        console.log(exception.constructor.name);
 
         if (
             status === HttpStatus.INTERNAL_SERVER_ERROR &&

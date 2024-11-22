@@ -1,17 +1,16 @@
 import {
+    BaseEntity,
     Column,
     CreateDateColumn,
     Entity,
     JoinColumn,
-    ManyToOne,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserEntity } from '~/modules/user/user.entity';
 import { RefreshTokenEntity } from './refresh-token.entity';
 
 @Entity({ name: 'user_access_tokens' })
-export class AccessTokenEntity {
+export class AccessTokenEntity extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
@@ -31,11 +30,6 @@ export class AccessTokenEntity {
             cascade: true,
         }
     )
+    @JoinColumn({ name: 'refresh_token_id' })
     refreshToken!: RefreshTokenEntity;
-
-    @ManyToOne(() => UserEntity, user => user.accessTokens, {
-        onDelete: 'CASCADE',
-    })
-    @JoinColumn({ name: 'user_id' })
-    user!: UserEntity;
 }

@@ -1,11 +1,14 @@
 import { INestApplication, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AllConfigType, IAppConfig, ISwaggerConfig } from './config';
+import { ConfigKeyPaths, IAppConfig, ISwaggerConfig } from './config';
 import { ConfigService } from '@nestjs/config';
+import { CommonEntity } from './common/entity/common.entity';
+import { ResOp } from './common/model/response.model';
+import { API_SECURITY_AUTH } from './common/decorators/swagger.decorator';
 
 export function setupSwagger(
     app: INestApplication,
-    configService: ConfigService<AllConfigType>
+    configService: ConfigService<ConfigKeyPaths>
 ): void {
     const { name, port } = configService.get<IAppConfig>('app');
     const { enable, path, version } =
@@ -15,12 +18,26 @@ export function setupSwagger(
 
     const documentBuilder = new DocumentBuilder()
         .setTitle(name)
-        .setDescription(`${name} API document`)
+        .setDescription(`${name} API document `)
         .setVersion(version);
 
+    documentBuilder.addSecurity(API_SECURITY_AUTH, {
+        description: 'Nhập mã token(Enter the token): ',
+        type: 'http',
+        scheme: 'Bearer',
+        bearerFormat: 'JWT',
+    });
+
     const document = () =>
-        SwaggerModule.createDocument(app, documentBuilder.build());
-    SwaggerModule.setup(path, app, document);
+        SwaggerModule.createDocument(app, documentBuilder.build(), {
+            ignoreGlobalPrefix: false,
+            extraModels: [CommonEntity, ResOp],
+        });
+    SwaggerModule.setup(path, app, document, {
+        swaggerOptions: {
+            persistAuthorization: true,
+        },
+    });
 
     const logger = new Logger('SwaggerModule');
     logger.log(`Document running on http://127.0.0.1:${port}/${path}`);

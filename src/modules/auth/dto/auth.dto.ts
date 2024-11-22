@@ -1,6 +1,4 @@
-import { UsePipes } from '@nestjs/common';
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import {
     IsEmail,
     IsEmpty,
@@ -10,7 +8,7 @@ import {
     Matches,
     ValidateIf,
 } from 'class-validator';
-import dayjs from 'dayjs';
+import { DateField, StringField } from '~/common/decorators/field.decorator';
 import { UserGender } from '~/modules/user/user.constant';
 
 export class RegisterDto {
@@ -55,8 +53,42 @@ export class RegisterDto {
     phone: string;
 
     @ApiProperty({ description: 'Ngày sinh' })
-    @Transform(({ value }) =>
-        value ? dayjs.unix(value).toDate() : dayjs('01-01-2000').toDate()
-    )
+    @DateField()
     birthDate: Date;
+}
+
+export class LoginDto {
+    @ApiProperty({ description: 'Tên tài khoản hoặc số điện thoại' })
+    @StringField()
+    usernameOrPhone: string;
+
+    @ApiProperty({ description: 'Mật khẩu' })
+    @StringField()
+    password: string;
+}
+
+export class PasswordUpdateDto {
+    @ApiProperty({ description: 'Mật khẩu', example: 'TienDat01' })
+    @Matches(/^\S*(?=\S{6})(?=\S*\d)(?=\S*[A-Z])\S*$/i, {
+        message:
+            'Password must include numbers, letters, and be 6-16 characters long',
+    })
+    oldPassword: string;
+
+    @ApiProperty({ description: 'Mật khẩu', example: 'TienDat01' })
+    @Matches(/^\S*(?=\S{6})(?=\S*\d)(?=\S*[A-Z])\S*$/i, {
+        message:
+            'Password must include numbers, letters, and be 6-16 characters long',
+    })
+    newPassword: string;
+}
+
+export class AccountUpdateDto extends PartialType(
+    OmitType(RegisterDto, ['username', 'password'])
+) {}
+
+export class RefreshTokenDto {
+    @ApiProperty({ description: 'Refresh token ' })
+    @StringField()
+    refreshToken: string;
 }

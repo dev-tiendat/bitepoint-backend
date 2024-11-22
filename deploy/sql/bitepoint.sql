@@ -42,13 +42,13 @@ CREATE TABLE `sys_role` (
   `status` tinyint DEFAULT '1',
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-  `create_by` int NOT NULL, 
-  `update_by` int NOT NULL,
+  `create_by` int NULL, 
+  `update_by` int NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY (`name`) USING BTREE,
   UNIQUE KEY (`value`) USING BTREE,
-  FOREIGN KEY (`create_by`) REFERENCES `user` (`id`),
-  FOREIGN KEY (`update_by`) REFERENCES `user` (`id`)
+  FOREIGN KEY (`create_by`) REFERENCES `sys_user` (`id`),
+  FOREIGN KEY (`update_by`) REFERENCES `sys_user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `sys_user_roles` (
@@ -59,7 +59,8 @@ CREATE TABLE `sys_user_roles` (
   FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `user_access_tokens` (
+
+CREATE TABLE `user_refresh_tokens` (
   `id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `value` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `expired_at` datetime NOT NULL,
@@ -69,15 +70,16 @@ CREATE TABLE `user_access_tokens` (
   FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `user_refresh_tokens` (
+
+CREATE TABLE `user_access_tokens` (
   `id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `value` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `expired_at` datetime NOT NULL,
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `accessTokenId` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `refresh_token_id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY (`accessTokenId`),
-  FOREIGN KEY (`accessTokenId`) REFERENCES `user_access_tokens` (`id`) ON DELETE CASCADE
+  UNIQUE KEY (`refresh_token_id`),
+  FOREIGN KEY (`refresh_token_id`) REFERENCES `user_refresh_tokens` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `sys_task` (
@@ -127,9 +129,13 @@ CREATE TABLE `sys_menu` (
   `status` tinyint NOT NULL DEFAULT '1',
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `create_by` int NOT NULL,
+  `update_by` int NOT NULL,
   `is_ext` tinyint NOT NULL DEFAULT '0',
   `ext_open_mode` tinyint NOT NULL DEFAULT '1',
   `active_menu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  FOREIGN KEY (`create_by`) REFERENCES `sys_user` (`id`),
+  FOREIGN KEY (`update_by`) REFERENCES `sys_user` (`id`)
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
@@ -166,16 +172,42 @@ CREATE TABLE `sys_menu_item` (
   FOREIGN KEY (`category_id`) REFERENCES `sys_category` (`id`) ON UPDATE CASCADE
 );
 
+
+CREATE TABLE `sys_table_zone` (
+	`id` int NOT NULL AUTO_INCREMENT,
+  `zone_name` varchar(50) NOT NULL,
+	`created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  INDEX (`zone_name`),
+  UNIQUE KEY (`zone_name`),
+	PRIMARY KEY (`id`)
+);
+
+
+CREATE TABLE `sys_table_type` (
+	`id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(70) NOT NULL,
+  `image` varchar(255) NOT NULL,
+	`created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+	`updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+	PRIMARY KEY (`id`)
+);
+
+
 CREATE TABLE `sys_table` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `table_number` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `table_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `status` tinyint NOT NULL DEFAULT '0',
   `type` tinyint NOT NULL DEFAULT '0',
+  `table_zone_id` INT NOT NULL,
+  `table_type_id` INT NOT NULL
   `show` tinyint NOT NULL DEFAULT '1',
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
-  UNIQUE KEY (`table_number`)
+  UNIQUE KEY (`table_name`),
+  FOREIGN KEY (`table_zone_id`) REFERENCES `sys_table_zone`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`table_type_id`) REFERENCES `sys_table_type`(`id`)
 );
 
 CREATE TABLE `sys_voucher` (
@@ -224,7 +256,7 @@ CREATE TABLE `sys_payment` (
   `payment_method` tinyint NOT NULL,
   `payment_status` tinyint NOT NULL,
   `payment_time` tinyint NOT NULL,
-  `total_amout` bigint NOT NULL,
+  `total_amount` bigint NOT NULL,
   
   PRIMARY KEY (`id`),
   FOREIGN KEY (`order_id`) REFERENCES `sys_order`(`id`)
@@ -258,9 +290,20 @@ CREATE TABLE `sys_reservation` (
   FOREIGN KEY (`table_id`) REFERENCES `sys_table`(`id`) ON UPDATE CASCADE
 );
 
-use bitepoint;
+CREATE TABLE `file` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ext_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_private` boolean DEFAULT FALSE,
+  `user_id` int DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`) VALUES (1, 'admin', '管理员', '超级管理员', 1, '2023-11-10 00:31:44.058463', '2024-01-28 21:08:39.000000');
-INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`) VALUES (2, 'user', '用户', '', 1, '2023-11-10 00:31:44.058463', '2024-01-30 18:44:45.000000');
-INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`) VALUES (9, 'test', '测试', NULL, 1, '2024-01-23 22:46:52.408827', '2024-01-30 01:04:52.000000');
+INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`) VALUES (1, 'admin', 'Quản trị viên', '', 1, '2023-11-10 00:31:44.058463', '2024-01-28 21:08:39.000000');
+INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`) VALUES (2, 'user', 'Người dùng', '', 1, '2023-11-10 00:31:44.058463', '2024-01-30 18:44:45.000000');
+INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`) VALUES (9, 'employee', 'Nhân viên', NULL, 1, '2024-01-23 22:46:52.408827', '2024-01-30 01:04:52.000000');
 

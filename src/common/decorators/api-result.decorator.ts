@@ -17,9 +17,6 @@ function genBaseProp(type: Type<any>) {
     else return { $ref: getSchemaPath(type) };
 }
 
-/**
- * @description: 生成返回结果装饰器
- */
 export function ApiResult<TModel extends Type<any>>({
     type,
     isPage,

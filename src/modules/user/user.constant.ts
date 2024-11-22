@@ -1,10 +1,10 @@
 export enum UserStatus {
-    Disable = 0,
-    Enabled = 1,
+    DISABLE = 0,
+    ENABLED = 1,
 }
 
 export enum UserGender {
-    Female = 0,
-    Male = 1,
-    Other = 2,
+    FEMALE = 0,
+    MALE = 1,
+    OTHER = 2,
 }

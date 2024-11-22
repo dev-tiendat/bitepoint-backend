@@ -15,10 +15,10 @@ const dataSourceOptions: DataSourceOptions = {
     synchronize: envBoolean('DB_SYNCHRONIZE', false),
 };
 
-export const dbRegToken = 'database';
+export const DB_REG_TOKEN = 'database';
 
 export const DatabaseConfig = registerAs(
-    dbRegToken,
+    DB_REG_TOKEN,
     (): DataSourceOptions => dataSourceOptions
 );
 

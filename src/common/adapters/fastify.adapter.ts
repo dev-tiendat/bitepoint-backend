@@ -8,17 +8,17 @@ const app: FastifyAdapter = new FastifyAdapter({
 });
 export { app as fastifyApp };
 
-// app.register(FastifyMultipart, {
-//     limits: {
-//         fields: 10,
-//         fileSize: 1024 * 1024 * 6,
-//         files: 5,
-//     },
-// });
+app.register(FastifyMultipart, {
+    limits: {
+        fields: 10,
+        fileSize: 1024 * 1024 * 6,
+        files: 5,
+    },
+});
 
-// app.register(FastifyCookie, {
-//     secret: 'cookie-secret',
-// });
+app.register(FastifyCookie, {
+    secret: 'cookie-secret',
+});
 
 app.getInstance().addHook('onRequest', (request, reply, done) => {
     const { origin } = request.headers;

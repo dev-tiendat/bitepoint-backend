@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 
 import {
@@ -39,4 +40,14 @@ export class TreeResult<T> {
 
     @ApiProperty()
     children?: TreeResult<T>[];
+}
+
+export class Timestamp {
+    @AutoMap()
+    @ApiProperty({ description: 'Ngày tạo' })
+    createdAt: number;
+
+    @AutoMap()
+    @ApiProperty({ description: 'Ngày cập nhật cuối cùng' })
+    updatedAt: number;
 }

@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
@@ -13,9 +14,11 @@ export abstract class CommonEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @AutoMap()
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
 
+    @AutoMap()
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
 }
@@ -23,13 +26,13 @@ export abstract class CommonEntity extends BaseEntity {
 export abstract class CompleteEntity extends CommonEntity {
     @ApiHideProperty()
     @Exclude()
-    @Column({ name: 'created_by', update: false, nullable: true })
-    createdBy: number;
+    @Column({ name: 'create_by', update: false, nullable: true })
+    createBy: number;
 
     @ApiHideProperty()
     @Exclude()
-    @Column({ name: 'updated_by', nullable: true })
-    updatedBy: number;
+    @Column({ name: 'update_by', nullable: true })
+    updateBy: number;
 
     @VirtualColumn({
         query: alias =>
@@ -42,5 +45,4 @@ export abstract class CompleteEntity extends CommonEntity {
             `SELECT username FROM sys_user WHERE id = ${alias}.updated_by`,
     })
     updater: string;
-    ƒ;
 }
