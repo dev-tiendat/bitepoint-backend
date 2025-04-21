@@ -64,7 +64,7 @@ export class OrderEventsGateway
         this.clientOrderIdMap.set(client.id, orderId);
 
         client.join(orderId);
-        const result = await this.orderService.findOrderItemByOrderId(orderId);
+        const result = await this.orderService.findOrderItemsByOrderId(orderId);
 
         return result;
     }
@@ -76,7 +76,7 @@ export class OrderEventsGateway
     ) {
         const orderId = this.findOrderIdByClient(client);
 
-        const result = await this.orderService.order(orderId, data.items);
+        const result = await this.orderService.createOrderItems(orderId, data.items);
 
         this._server
             .to(data.orderId.toString())
@@ -89,7 +89,7 @@ export class OrderEventsGateway
         @ConnectedSocket() client: Socket,
         @MessageBody() orderItemId: number
     ) {
-        const result = await this.orderService.urgentOrderItem(orderItemId);
+        const result = await this.orderService.urgeOrderItem(orderItemId);
 
         const clientOrderId = this.clientOrderIdMap.get(client.id);
 
@@ -119,7 +119,7 @@ export class OrderEventsGateway
         @ConnectedSocket() client: Socket,
         @MessageBody() data: OrderItemStatusUpdateDto
     ) {
-        const result = await this.orderService.nextStepOrderItem(
+        const result = await this.orderService.advanceOrderItemStatus(
             data.orderItemId
         );
         this._server
