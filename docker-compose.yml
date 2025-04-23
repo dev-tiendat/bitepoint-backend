@@ -1,0 +1,66 @@
+services:
+  mysql:
+    image: mysql:latest
+    platform: linux/amd64
+    container_name: bitepoint-mysql
+    restart: always
+    env_file:
+      - .env
+      - .env.prod
+    environment:
+      - MYSQL_HOST=${DB_HOST}
+      - MYSQL_PORT=${DB_PORT}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USERNAME=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    ports:
+      - '${DB_PORT}:3306'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    volumes:
+      - ./__data/mysql/:/var/lib/mysql/
+      - ./deploy/sql/:/docker-entrypoint-initdb.d/
+    networks:
+      - bitepoint-net
+
+  redis:
+    image: redis:alpine
+    platform: linux/amd64
+    container_name: bitepoint-redis
+    restart: always
+    env_file:
+      - .env
+      - .env.prod
+    ports:
+      - '${REDIS_PORT}:6379'
+    command: --requirepass ${REDIS_PASSWORD}
+    networks:
+      - bitepoint-net
+
+  bitepoint-server:
+    build:
+      context: .
+      args:
+        - PROJECT_DIR=${PROJECT_DIR}
+    image: bitepoint-server:stable
+    platform: linux/amd64
+    container_name: bitepoint-server
+    restart: always
+    env_file:
+      - .env
+      - .env.prod
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+    volumes:
+      - ./logs/:${PROJECT_DIR}/logs/
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - bitepoint-net
+
+networks:
+  bitepoint-net:
+    name: bitepoint-net
