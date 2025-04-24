@@ -22,5 +22,5 @@ jobs:
                       git pull
                       echo "${{ secrets.DEPLOY_ENV_FILE }}" > .env
                       echo "${{ secrets.DEPLOY_ENV_PROD_FILE }}" > .env.prod
-                      npm run docker:build
+                      docker compose --env-file .env --env-file .env.prod up -d  --pull=always
                
