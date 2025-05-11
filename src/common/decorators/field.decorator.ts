@@ -47,6 +47,7 @@ interface IStringFieldOptions extends IOptionalOptions {
     maxLength?: number;
     lowerCase?: boolean;
     upperCase?: boolean;
+    match?: RegExp;
 }
 
 interface IArrayFieldOptions extends IOptionalOptions {
@@ -96,6 +97,7 @@ export function StringField(
         lowerCase,
         upperCase,
         required = true,
+        match,
     } = options;
 
     const decorators = [AutoMap(), IsString({ each }), ToTrim()];
@@ -109,6 +111,8 @@ export function StringField(
     if (lowerCase) decorators.push(ToLowerCase());
 
     if (upperCase) decorators.push(ToUpperCase());
+
+    if (match) decorators.push(Matches(match, { each }));
 
     if (!required) decorators.push(IsOptional());
     else decorators.push(IsNotEmpty({ each }));
