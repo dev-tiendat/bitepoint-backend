@@ -73,11 +73,11 @@ export class AuthService {
 
         const roleIds = await this.roleService.getRoleIdsByUserId(user.id);
 
-        const roles = await this.roleService.getRoleValues(roleIds);
+        const roles = await this.roleService.getRoleInfo(roleIds);
 
         const token = await this.tokenService.generateRefreshToken(
             user.id,
-            roles
+            roles.map(v => v.value)
         );
 
         await this.redis.set(

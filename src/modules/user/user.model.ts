@@ -2,6 +2,7 @@ import { ApiProperty, IntersectionType } from '@nestjs/swagger';
 import { UserGender } from './user.constant';
 import { AutoMap } from '@automapper/classes';
 import { CommonModel } from '~/common/model/response.model';
+import { RoleInfo } from '../system/role/role.model';
 
 export class AccountInfo {
     @ApiProperty({ description: 'ID' })
@@ -45,8 +46,8 @@ export class AccountInfo {
     status: number;
 
     @ApiProperty({ description: 'Vai trò' })
-    @AutoMap()
-    roles: string[];
+    @AutoMap(() => RoleInfo)
+    roles: RoleInfo[];
 }
 
 export class UserDetail extends IntersectionType(AccountInfo, CommonModel) {}

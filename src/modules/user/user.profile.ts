@@ -21,23 +21,11 @@ export class UserProfile extends AutomapperProfile {
 
     get profile(): MappingProfile {
         return mapper => {
-            createMap(
-                mapper,
-                UserEntity,
-                AccountInfo,
-                forMember(
-                    destination => destination.roles,
-                    mapFrom(source => source.roles?.map(v => v.value))
-                )
-            );
+            createMap(mapper, UserEntity, AccountInfo);
             createMap(
                 mapper,
                 UserEntity,
                 UserDetail,
-                forMember(
-                    destination => destination.roles,
-                    mapFrom(source => source.roles?.map(v => v.value))
-                ),
                 typeConverter(Date, Number, date => dayjs(date).unix())
             );
         };

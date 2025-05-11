@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+import { RoleInfo } from '~/modules/system/role/role.model';
+
 export class AuthToken {
     @ApiProperty({ description: 'Mã thông báo nhân dạng JWT' })
     accessToken: string;
@@ -19,7 +21,7 @@ export class AuthLoginResult {
     avatar: string;
 
     @ApiProperty({ description: 'Vai trò' })
-    roles: string[];
+    roles: RoleInfo[];
 
     @ApiProperty({ description: 'Mã token' })
     tokens: AuthToken;
