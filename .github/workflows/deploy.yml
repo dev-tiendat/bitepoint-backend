@@ -30,5 +30,7 @@ jobs:
                       git pull
                       echo "${{ secrets.DEPLOY_ENV_FILE }}" > .env
                       echo "${{ secrets.DEPLOY_ENV_PROD_FILE }}" > .env.prod
-                      docker compose --env-file .env --env-file .env.prod stop bitepoint-server && docker container rm bitepoint-server && docker rmi bitepoint-server
-                      docker compose --env-file .env --env-file .env.prod up --build
+                      export NVM_DIR=~/.nvm
+                      source ~/.nvm/nvm.sh
+                      npm run docker:rmi
+                      npm run docker:prod:up
