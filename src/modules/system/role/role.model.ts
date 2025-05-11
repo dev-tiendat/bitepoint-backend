@@ -11,6 +11,7 @@ import { IsUnique } from '~/shared/database/constraints/unique.constraint';
 
 import { RoleEntity } from './role.entity';
 import { RoleStatus } from './role.constant';
+import { AutoMap } from '@automapper/classes';
 
 export class RoleDto extends OperatorDto {
     @ApiProperty({ description: 'Tên nhóm quyền', example: 'Admin' })
@@ -38,9 +39,11 @@ export class RoleDto extends OperatorDto {
 
 export class RoleInfo {
     @ApiProperty({ description: 'Tên nhóm quyền' })
+    @AutoMap()
     name: string;
 
     @ApiProperty({ description: 'Mã vai trò' })
+    @AutoMap()
     value: string;
 }
 

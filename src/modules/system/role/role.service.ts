@@ -5,6 +5,8 @@ import {
     Injectable,
 } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { In, Repository } from 'typeorm';
 import { isEmpty } from 'lodash';
 
@@ -12,7 +14,7 @@ import { ROOT_ROLE_ID } from '~/constants/system.constant';
 
 import { MenuService } from '../menu/menu.service';
 import { RoleEntity } from './role.entity';
-import { RoleDto, RoleUpdateDto } from './role.model';
+import { RoleDto, RoleInfo, RoleUpdateDto } from './role.model';
 
 @Injectable()
 export class RoleService {
@@ -22,7 +24,9 @@ export class RoleService {
         @Inject(forwardRef(() => MenuService))
         private menuService: MenuService,
         @InjectEntityManager()
-        private entityManager
+        private entityManager,
+        @InjectMapper()
+        private mapper: Mapper
     ) {}
 
     async list() {
@@ -85,6 +89,14 @@ export class RoleService {
                 id: In(ids),
             })
         ).map(v => v.value);
+    }
+
+    async getRoleInfo(ids: number[]): Promise<RoleInfo[]> {
+        const result = await this.roleRepository.findBy({
+            id: In(ids),
+        });
+
+        return this.mapper.mapArray(result, RoleEntity, RoleInfo);
     }
 
     hasAdminRole(rids: number[]): boolean {
