@@ -29,6 +29,7 @@ import { ISecurityConfig, SecurityConfig } from '~/config';
 import { UserDto, UserQueryDto } from './dto/user.dto';
 import { paginate } from '~/helper/paginate';
 import { Pagination } from '~/helper/paginate/pagination';
+import { FileService } from '../file/file.service';
 
 @Injectable()
 export class UserService {
@@ -39,6 +40,7 @@ export class UserService {
         private roleRepository: Repository<RoleEntity>,
         @InjectEntityManager()
         private entityManager: EntityManager,
+        private fileService: FileService,
         @InjectRedis()
         private redis: Redis,
         @InjectMapper()
@@ -155,12 +157,22 @@ export class UserService {
     async updateAccountInfo(
         uid: number,
         info: AccountUpdateDto
-    ): Promise<void> {
+    ): Promise<AccountInfo> {
+        let imagePath = null;
+        if (!!info.avatar)
+            imagePath = await this.fileService.saveFile(info.avatar);
+
         const user = await this.userRepository.findOneBy({ id: uid });
         if (isEmpty(user))
             throw new BusinessException(ErrorCode.USER_NOT_FOUND);
 
-        await this.userRepository.update(uid, info);
+        const result = await this.userRepository.save({
+            ...user,
+            ...info,
+            avatar: imagePath || user.avatar,
+        });
+
+        return this.mapper.map(result, UserEntity, AccountInfo);
     }
 
     async exist(username: string) {

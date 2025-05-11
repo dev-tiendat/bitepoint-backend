@@ -27,7 +27,7 @@ export class UserProfile extends AutomapperProfile {
                 AccountInfo,
                 forMember(
                     destination => destination.roles,
-                    mapFrom(source => source.roles.map(v => v.value))
+                    mapFrom(source => source.roles?.map(v => v.value))
                 )
             );
             createMap(
@@ -36,7 +36,7 @@ export class UserProfile extends AutomapperProfile {
                 UserDetail,
                 forMember(
                     destination => destination.roles,
-                    mapFrom(source => source.roles.map(v => v.value))
+                    mapFrom(source => source.roles?.map(v => v.value))
                 ),
                 typeConverter(Date, Number, date => dayjs(date).unix())
             );

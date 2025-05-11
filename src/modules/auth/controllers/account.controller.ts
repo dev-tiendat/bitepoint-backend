@@ -12,6 +12,7 @@ import { AuthUser } from '../decorators/auth-user.decorator';
 import { AuthService } from '../auth.service';
 import { AccountUpdateDto, PasswordUpdateDto } from '../dto/auth.dto';
 import { OrderService } from '~/modules/order/order.service';
+import { FormDataRequest } from 'nestjs-form-data';
 
 @Controller({
     path: 'account',
@@ -34,7 +35,7 @@ export class AccountController {
         return this.userService.getAccountInfo(uid);
     }
 
-    @Get('logout')
+    @Post('logout')
     @AllowAnon()
     @ApiOperation({ summary: 'Đăng xuất tài khoản' })
     async logout(
@@ -56,17 +57,18 @@ export class AccountController {
     @AllowAnon()
     @ApiOperation({ summary: 'Lấy danh sách menu ' })
     async menu(@AuthUser('uid') uid: number) {
-        // return this.authService;
+        return this.authService.getMenus(uid);
     }
 
     @Put('update')
     @AllowAnon()
+    @FormDataRequest()
     @ApiOperation({ summary: 'Cập nhật thông tin tài khoản' })
     async update(
         @AuthUser('uid') uid: number,
         @Body() dto: AccountUpdateDto
-    ): Promise<void> {
-        await this.userService.updateAccountInfo(uid, dto);
+    ): Promise<AccountInfo> {
+        return this.userService.updateAccountInfo(uid, dto);
     }
 
     @Post('password')
