@@ -28,7 +28,7 @@ export class FileService {
 
     async saveFile(file: MemoryStoredFile, uid?: number): Promise<string> {
         const isPrivate = !isEmpty(uid);
-        const extName = getExtname(file.originalName);
+        const extName = file.extension;
         const type = getFileType(extName);
         const fileName = generateNameFile(extName);
         const path = getFilePath(fileName, type, isPrivate);
@@ -46,7 +46,7 @@ export class FileService {
         return `${this.appConfig.baseUrl}/files/${fileName}`;
     }
 
-    async getFile(name: string): Promise<{ file: ReadStream; type: string }> {
+    async getFile(name: string): Promise<ReadStream> {
         const fileInfo = await this.fileRepository.findOneBy({
             fileName: name,
         });
@@ -56,6 +56,6 @@ export class FileService {
             join(process.cwd(), 'uploads', fileInfo.path)
         );
 
-        return { file, type: fileInfo.type };
+        return file;
     }
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { FileController } from './file.controller';
@@ -7,6 +7,7 @@ import { FileEntity } from './file.entity';
 
 const providers = [FileService];
 
+@Global()
 @Module({
     imports: [TypeOrmModule.forFeature([FileEntity])],
     controllers: [FileController],

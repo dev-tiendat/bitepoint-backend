@@ -18,8 +18,8 @@ export class FileController {
     @Bypass()
     @Get(':path')
     async getFile(@Param('path') fileName: string, @Res() res: FastifyReply) {
-        const result = await this.fileService.getFile(fileName);
+        const file = await this.fileService.getFile(fileName);
         
-        res.type(result.type).send(result.file);
+        res.send(file);
     }
 }
