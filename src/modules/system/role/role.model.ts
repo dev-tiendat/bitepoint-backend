@@ -1,4 +1,4 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty, PartialType, PickType } from '@nestjs/swagger';
 import { Matches } from 'class-validator';
 
 import {
@@ -17,7 +17,7 @@ export class RoleDto extends OperatorDto {
     @StringField({ minLength: 2 })
     name: string;
 
-    @ApiProperty({ description: 'ID vai trò', example: 'admin' })
+    @ApiProperty({ description: 'Mã vai trò', example: 'admin' })
     @IsUnique({ entity: RoleEntity })
     @StringField({ minLength: 2 })
     @Matches(/^[a-z0-9]+$/i, { message: 'Role ID must be alphanumeric' })
@@ -34,6 +34,14 @@ export class RoleDto extends OperatorDto {
     @ApiProperty({ description: 'Danh sách ID menu' })
     @ArrayField({ type: 'number' })
     menuIds: number[];
+}
+
+export class RoleInfo {
+    @ApiProperty({ description: 'Tên nhóm quyền' })
+    name: string;
+
+    @ApiProperty({ description: 'Mã vai trò' })
+    value: string;
 }
 
 export class RoleUpdateDto extends PartialType(RoleDto) {}
