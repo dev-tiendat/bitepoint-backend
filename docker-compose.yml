@@ -42,7 +42,7 @@ services:
       context: .
       args:
         - PROJECT_DIR=${PROJECT_DIR}
-    image: bitepoint-server:stable
+    image: bitepoint-server:latest
     platform: linux/amd64
     container_name: bitepoint-server
     restart: always

@@ -22,6 +22,7 @@ jobs:
                       git pull
                       echo "${{ secrets.DEPLOY_ENV_FILE }}" > .env
                       echo "${{ secrets.DEPLOY_ENV_PROD_FILE }}" > .env.prod
+                      npm run docker:rmi
                       npm run docker:build
                       docker image prune -f
                       docker container prune -f

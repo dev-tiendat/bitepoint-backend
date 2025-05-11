@@ -23,8 +23,9 @@
     "migration:revert": "npm run typeorm -- migration:revert",
     "docker:build:dev": "docker compose --env-file .env --env-file .env.dev up --build",
     "docker:build": "docker compose --env-file .env --env-file .env.prod up --build",
-    "docker:up": "docker compose --env-file .env --env-file .env.prod up -d --no-build",
-    "docker:down": "docker compose --env-file .env --env-file .env.prod down"
+    "docker:up": "docker compose --env-file .env --env-file .env.prod up -d",
+    "docker:down": "docker compose --env-file .env --env-file .env.prod down",
+    "docker:rmi": "docker compose --env-file .env --env-file .env.prod stop bitepoint-server && docker container rm bitepoint-server && docker rmi bitepoint-server"
   },
   "dependencies": {
     "@2captcha/captcha-solver": "^1.3.0",
