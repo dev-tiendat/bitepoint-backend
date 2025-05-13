@@ -37,6 +37,7 @@ import { NotificationModule } from './modules/notification/notification.module';
 import { SseModule } from './modules/sse/sse.module';
 import { FeedBackModule } from './modules/feedback/feedback.module';
 import { VoucherModule } from './modules/voucher/voucher.module';
+import { LogModule } from './modules/system/log/log.module';
 
 @Module({
     imports: [
@@ -75,6 +76,7 @@ import { VoucherModule } from './modules/voucher/voucher.module';
         DatabaseModule,
         FileModule,
         SseModule,
+        LogModule,
 
         ParamConfigModule,
         AuthModule,
