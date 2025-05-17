@@ -48,13 +48,13 @@ export class AuthController {
     async login(
         @Body() dto: LoginDto,
         @Ip() ip: string,
-        // @Headers('user-gent') ua: string
+        @Headers('user-agent') ua: string
     ): Promise<AuthLoginResult> {
         return this.authService.login(
             dto.usernameOrPhone,
             dto.password,
             ip,
-            undefined
+            ua
         );
     }
 

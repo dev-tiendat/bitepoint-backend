@@ -19,6 +19,7 @@ import { RoleModule } from '../system/role/role.module';
 import { MenuModule } from '../system/menu/menu.module';
 import { OrderModule } from '../order/order.module';
 import { EmailController } from './controllers/email.controller';
+import { LogModule } from '../system/log/log.module';
 
 const controllers = [AccountController, EmailController];
 const providers = [AuthService, TokenService];
@@ -49,6 +50,7 @@ const strategies = [LocalStrategy, JwtStrategy];
         RoleModule,
         MenuModule,
         OrderModule,
+        LogModule,
     ],
     controllers: [AuthController, ...controllers],
     providers: [...providers, ...strategies],

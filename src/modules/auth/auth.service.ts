@@ -23,6 +23,7 @@ import { UserService } from '../user/user.service';
 import { TokenService } from './services/token.service';
 import { AuthLoginResult } from './models/auth.model';
 import { MenuService } from '../system/menu/menu.service';
+import { LoginLogService } from '../system/log/services/login-log.service';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +37,8 @@ export class AuthService {
         private userService: UserService,
         private roleService: RoleService,
         private tokenService: TokenService,
-        private menuService: MenuService
+        private menuService: MenuService,
+        private loginLogService: LoginLogService
     ) {}
 
     async validateUser(credential: string, password: string) {
@@ -90,6 +92,8 @@ export class AuthService {
 
         const permissions = await this.menuService.getPermissions(user.id);
         await this.setPermissionsCache(user.id, permissions);
+
+        await this.loginLogService.create(user.id, ip, ua);
 
         const result: AuthLoginResult = {
             username: user.username,
