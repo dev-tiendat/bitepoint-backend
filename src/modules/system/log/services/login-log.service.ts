@@ -12,6 +12,8 @@ import { getIpAddress } from '~/utils/ip.util';
 import { LoginLogQueryDto } from '../dto/log.dto';
 import { LoginLogEntity } from '../entities/login-log.entity';
 import { LoginLogInfo } from '../models/log.model';
+import { PagerDto } from '~/common/dto/pager.dto';
+import { PaginationType } from '~/helper/paginate/interface';
 
 async function parseLoginLog(e: any, parser: UAParser): Promise<LoginLogInfo> {
     const uaResult = parser.setUA(e.login_log_ua).getResult();
@@ -20,8 +22,8 @@ async function parseLoginLog(e: any, parser: UAParser): Promise<LoginLogInfo> {
         id: e.login_log_id,
         ip: e.login_log_ip,
         address: e.login_log_address,
-        os: `${`${uaResult.os.name ?? ''} `}${uaResult.os.version}`,
-        browser: `${`${uaResult.browser.name ?? ''} `}${uaResult.browser.version}`,
+        os: `${`${uaResult.os.name ?? ''} `}${uaResult.os.version ?? ''}`,
+        browser: `${`${uaResult.browser.name ?? ''} `}${uaResult.browser.version ?? ''}`,
         username: e.user_username,
         time: e.login_log_created_at,
     };
@@ -47,6 +49,34 @@ export class LoginLogService {
         } catch (e) {
             console.error(e);
         }
+    }
+
+    async listByUid(uid: number, queryDto: PagerDto) {
+        const { page = 1, limit = 10 } = queryDto;
+        const queryBuilder = await this.loginLogRepository
+            .createQueryBuilder('login_log')
+            .innerJoinAndSelect('login_log.user', 'user')
+            .where('user.id = :uid', { uid })
+            .orderBy('login_log.created_at', 'DESC');
+
+        const { items, ...rest } = await paginateRaw<LoginLogEntity>(
+            queryBuilder,
+            {
+                page,
+                pageSize: limit,
+                paginationType: PaginationType.LIMIT_AND_OFFSET,
+            }
+        );
+
+        const parser = new UAParser();
+        const loginLogInfos = await Promise.all(
+            items.map(item => parseLoginLog(item, parser))
+        );
+
+        return {
+            items: loginLogInfos,
+            ...rest,
+        };
     }
 
     async list({ page, limit, username, ip, address, time }: LoginLogQueryDto) {

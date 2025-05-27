@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query, Req } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FastifyRequest } from 'fastify';
 
@@ -13,6 +13,8 @@ import { AuthService } from '../auth.service';
 import { AccountUpdateDto, PasswordUpdateDto } from '../dto/auth.dto';
 import { OrderService } from '~/modules/order/order.service';
 import { FormDataRequest } from 'nestjs-form-data';
+import { LoginLogService } from '~/modules/system/log/services/login-log.service';
+import { PagerDto } from '~/common/dto/pager.dto';
 
 @Controller({
     path: 'account',
@@ -24,7 +26,8 @@ export class AccountController {
     constructor(
         private userService: UserService,
         private authService: AuthService,
-        private orderService: OrderService
+        private orderService: OrderService,
+        private loginLogService: LoginLogService
     ) {}
 
     @Get('profile')
@@ -87,5 +90,12 @@ export class AccountController {
     @ApiOperation({ summary: 'Lấy lịch sử đơn hàng' })
     async orderHistory(@AuthUser('uid') uid: number) {
         return this.orderService.getOrderHistory(uid);
+    }
+
+    @Get('login-logs')
+    @AllowAnon()
+    @ApiOperation({ summary: 'Lấy lịch sử đăng nhập' })
+    async loginLogs(@AuthUser('uid') uid: number, @Query() query: PagerDto) {
+        return this.loginLogService.listByUid(uid, query);
     }
 }
