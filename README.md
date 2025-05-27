@@ -1,73 +1,83 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# 🍽️ Restaurant Ordering App - React Native & Next.js
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A modern restaurant ordering system designed to enhance customer experience and streamline staff workflows. This project includes:
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- 📱 **Mobile app** for customers (React Native)
+- 📱 **Mobile app** for staff (React Native)
+- 🖥️ **Admin website** for administrators (Next.js)
 
-## Description
+## 🚀 Main Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 👥 For Customers
+- Register/Login
+- Browse menu
+- Place food and table orders
+- Track dish preparation status
+- Pay via QR code or cash
+- Leave feedback and reviews
 
-## Installation
+### 👨‍🍳 For Staff
+- Receive and manage orders
+- Update food preparation status
+- Assist with payments
+- Manage table reservations
 
-```bash
-$ yarn install
-```
+### 🛠 For Admins (Web)
+- Manage users and roles
+- Manage menu and dining zones
+- Track revenue and promotions
 
-## Running the app
+## 🔐 User Roles
 
-```bash
-# development
-$ yarn run start
+- 👤 **Customer**: place orders, provide reviews
+- 🧑‍🍳 **Staff**: manage orders and assist payment
+- 🧑‍💼 **Admin**: manage system, users, and data
 
-# watch mode
-$ yarn run start:dev
+## 💳 Payment Methods
 
-# production mode
-$ yarn run start:prod
-```
+- ✅ **QR Code**: encode order information for bank verification
+- 💵 **Cash**: manually confirmed by staff
 
-## Test
+## 🧰 Technologies Used
 
-```bash
-# unit tests
-$ yarn run test
+| Component        | Technology                   |
+|------------------|------------------------------|
+| Mobile App       | React Native                 |
+| Web Admin        | Next.js                      |
+| Backend/API      | RESTful API (NestJS)         |
+| Database         | MySQL                        |
 
-# e2e tests
-$ yarn run test:e2e
+## 🖼️ Screenshots
+### 👨‍🍳 Mobile App - Staff
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center">
+    <img src="docs/images/employee1.png" width="400"/>
+    <img src="docs/images/employee2.png" width="400"/>
+    <img src="docs/images/employee3.png" width="400"/>
+    <img src="docs/images/employee4.png" width="400"/>
+    <img src="docs/images/employee12.png" width="400"/>
+    <img src="docs/images/employee5.png" width="400"/>
+    <img src="docs/images/employee6.png" width="400"/>
+    <img src="docs/images/employee7.png" width="400"/>
+    <img src="docs/images/employee8.png" width="400"/>
+    <img src="docs/images/employee9.png" width="400"/>
+    <img src="docs/images/employee10.png" width="400"/>
+    <img src="docs/images/employee11.png" width="400"/>
+</div>
 
-# test coverage
-$ yarn run test:cov
-```
+### 📲 Mobile App - Customer
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center">
+    <img src="docs/images/customer1.png" width="400"/>
+    <img src="docs/images/customer2.png" width="400"/>
+    <img src="docs/images/customer3.png" width="400"/>
+    <img src="docs/images/customer4.png" width="400"/>
+</div>
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+### 🖥️ Web Admin
+<div style="display: flex; flex-direction: column; gap: 20px; align-items: center">
+    <img src="docs/images/admin1.png" width="800"/>
+    <img src="docs/images/admin2.png" width="800"/>
+    <img src="docs/images/admin3.png" width="800"/>
+    <img src="docs/images/admin4.png" width="800"/>
+    <img src="docs/images/admin5.png" width="800"/>
+    <img src="docs/images/admin6.png" width="800"/>
+</div>
