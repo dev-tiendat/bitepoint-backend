@@ -31,7 +31,7 @@ export class RedisSubPub {
     const channel = this.channelPrefix + event
     const _data = JSON.stringify(data)
     if (event !== 'log')
-      Logger.debug(`发布事件：${channel} <- ${_data}`, RedisSubPub.name)
+      Logger.debug(`${channel} <- ${_data}`, RedisSubPub.name)
 
     await this.pubClient.publish(channel, _data)
   }
@@ -45,7 +45,7 @@ export class RedisSubPub {
     const cb = (channel, message) => {
       if (channel === myChannel) {
         if (event !== 'log')
-          Logger.debug(`接收事件：${channel} -> ${message}`, RedisSubPub.name)
+          Logger.debug(`${channel} -> ${message}`, RedisSubPub.name)
 
         callback(JSON.parse(message))
       }
